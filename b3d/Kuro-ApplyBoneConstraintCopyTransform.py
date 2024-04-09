@@ -4,7 +4,7 @@ bl_info = {
     "name": "Apply Bone Constraint Copy Transform",
     "author": "Kuro | GPT",
     "version": (1, 0),
-    "blender": (3, 6, 0),
+    "blender": (4, 1, 0),  # Updated for Blender 4.1
     "location": "3D View > N-panel > Bone Constraint",
     "description": "Apply Bone Constraint Copy Transform between 2 armatures which have same bone but rest pose sucks",
     "warning": "",
@@ -45,20 +45,15 @@ class ApplyBoneConstraintOperator(bpy.types.Operator):
             for bone_1 in target_armature.pose.bones:
                 if bone_1.name not in source_armature.data.bones:
                     unmatched_bones.append(bone_1.name)
+                else:
+                    bone_2 = source_armature.pose.bones.get(bone_1.name)
+                    if bone_2:
+                        copy_transform = bone_1.constraints.new('COPY_TRANSFORMS')
+                        copy_transform.target = source_armature
+                        copy_transform.subtarget = bone_1.name
 
             if unmatched_bones:
-                if len(unmatched_bones) > 1:
-                    self.report({'INFO'}, f"More than one bone in Source Armature doesn't have a matching bone in Target Armature.")
-                else:
-                    self.report({'INFO'}, f"Bone '{unmatched_bones[0]}' in Source Armature doesn't have a matching bone in Target Armature.")
-            else:
-                for bone_1 in target_armature.pose.bones:
-                    if bone_1.name in source_armature.data.bones:
-                        bone_2 = source_armature.pose.bones.get(bone_1.name)
-                        if bone_2:
-                            copy_transform = bone_1.constraints.new('COPY_TRANSFORMS')
-                            copy_transform.target = source_armature
-                            copy_transform.subtarget = bone_1.name
+                self.report({'INFO'}, f"Unmatched bones in Source Armature: {', '.join(unmatched_bones)}")
 
         return {'FINISHED'}
 
