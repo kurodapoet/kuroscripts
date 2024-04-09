@@ -1,0 +1,21 @@
+clockStart = 0;
+ 
+function padZero(n){
+  return (n < 10 ? "0" : "") + n;
+}
+ 
+clockTime = clockStart + effect("Slider Control")("Slider");
+ 
+if (clockTime < 0){
+  sign = "-";
+  clockTime = -clockTime;
+}else{
+  sign = "";
+}
+ 
+t = Math.floor(clockTime);
+hr = Math.floor(t/3600);
+min = Math.floor((t%3600)/60);
+sec = Math.floor(t%60);
+ms = clockTime.toFixed(3).substr(-3);
+sign + padZero(hr) + ":" + padZero(min) + ":" + padZero(sec)
