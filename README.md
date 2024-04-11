@@ -1,3 +1,3 @@
 # Hello, World!
 
-Here's a little poem for you:
+This is my personal scripts main used in Blender or After Effects
